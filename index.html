@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<!-- 2017-05-28 Sun 22:28 -->
+<meta  charset="utf-8" />
+<meta  htto-equiv="X-UA-Compatible" content="chrome=1" />
+<meta  name="generator" content="Org-mode with org-ioslide" />
+<meta  name="author" content="fatfingererr" />
+
+
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--This one seems to work all the time, but really small on ipad-->
+<!--<meta name="viewport" content="initial-scale=0.4">-->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="stylesheet" media="all" href="theme/css/default.css" />
+<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css" />
+<link rel="stylesheet" media="all" href="theme/css/small-icon.css" />
+<base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+<script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+
+   <script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
+
+<script src="js/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,local/local" type="text/javascript"></script>
+</head>
+<body style="opacity: 0">
+<slides class="layout-widescreen">
+<slide class="title-slide segue nobackground">
+       <aside class="gdbar"><img src="images/clojure-tw.png"></aside>
+       <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+       <hgroup class="auto-fadein">
+         <h1 data-config-title><!-- populated from slide_config.json --></h1>
+         <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+         <p data-config-presenter><!-- populated from slide_config.json --></p>
+       </hgroup>
+    </slide>
+  
+
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org8b923eb" class="outline-4">
+<h4 id="org8b923eb">大綱</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>測試</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/clojure-tw.png"></aside><hgroup class="">
+       <h2 class=" "><div id="outline-container-org3e53d37" class="outline-2">
+<h2 id="org3e53d37">數值塔 Numerical tower</h2>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-">
+
+
+</article>
+
+
+</slide>
+<slide id="sec-" class="fill white nobackground" style="background-image: url(images/taipei-101.jpg)">
+<hgroup class="">
+       <h2 class="white "><div id="outline-container-org2f9ca50" class="outline-4">
+<h4 id="org2f9ca50">什麼塔？</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org845a2f1" class="outline-4">
+<h4 id="org845a2f1">什麼是數值塔（Numerical tower）？</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>任何的數字，都可以被組織在一個子集的塔，塔中每一層是上一層的子集</li>
+</ul>
+<article class="flexbox vcenter">
+
+<div class="figure">
+<p><img src="images/numerical-tower.png" alt="numerical-tower.png" width="400px" />
+</p>
+</div>
+</article>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org0819c2f" class="outline-4">
+<h4 id="org0819c2f">類型到定義</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>當數值塔被建立起來，就可以依據每一層對應一種抽象的數值對象</li>
+</ul>
+
+
+<ul>
+<li>而抽象的數值對象，則可以用函數定義，如 number? , complex? , real? , rational?</li>
+</ul>
+
+
+<ul>
+<li>由於數值對象具有子集層層包含的關係，在電腦中處理會變得複雜
+<ul>
+<li><b>多重表示</b> ：數值塔越底層的對象，可以被更多重的表示</li>
+<li>例如：整數可以被表示為有理數、實數和複數</li>
+</ul></li>
+</ul>
+
+
+<ul>
+<li>這個概念主要在 Scheme 被提出，Clojure 也使用這個概念</li>
+</ul>
+
+
+<ul>
+<li>題外話，網路上也有一些 Python 和數值塔的討論</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orgfa9e094" class="outline-4">
+<h4 id="orgfa9e094">絕對值函數 ( abs )</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>為了解決數值塔的問題，我們首先看 Clojure 的絕對值函數：</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="clojure">
+(defn abs "(abs n) is the absolute value of n" [n]
+  (cond
+   (not (number? n)) (throw (IllegalArgumentException.
+           "abs requires a number"))
+   (neg? n) (minus n)
+   :else n))
+</pre>
+
+</div>
+
+<ul>
+<li>這邊蠻容易可以觀察出來，解決數值塔的問題就從塔最上層開始檢查</li>
+</ul>
+
+
+<ul>
+<li>一路往下層的子集去檢驗，這邊只對非數值（number?）分流出去丟錯誤</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org807c3d7" class="outline-4">
+<h4 id="org807c3d7">最大公因數函數 ( gcd )</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>這邊也可以看到，gcd 先對 a 或 b 兩個都要是整數做處理，不是整數就丟錯誤</li>
+</ul>
+
+
+<ul>
+<li>接著就是實現 gcd 的數學問題，這邊可以注意到特別判斷了有一數是 0 的情況</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="clojure">
+(defn gcd "(gcd a b) returns the greatest common divisor of a and b" [a b]
+  (if (or (not (integer? a)) (not (integer? b)))
+    (throw (IllegalArgumentException. "gcd requires two integers"))  
+    (loop [a (abs a) b (abs b)]
+      (if (zero? b) a,
+    (recur b (mod a b))))))
+</pre>
+
+</div>
+
+<ul>
+<li>迷之音：很美的實現！</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org194e5ae" class="outline-4">
+<h4 id="org194e5ae">最小公倍數函數 ( lcm )</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>最小公倍數的算法有特殊公式，可從 gcd 反推回來，所以很普通</li>
+</ul>
+
+
+<ul>
+<li>可以特別注意到的是這邊用 when 來判斷輸入型別，而非 if 
+<ul>
+<li><a href="https://stackoverflow.com/questions/25948511/when-to-use-if-vs-when-in-clojure">When to use if vs. when in Clojure</a></li>
+</ul></li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="clojure">
+(defn lcm
+  "(lcm a b) returns the least common multiple of a and b"
+  [a b]
+  (when (or (not (integer? a)) (not (integer? b)))
+    (throw (IllegalArgumentException. "lcm requires two integers")))
+  (cond (zero? a) 0
+        (zero? b) 0
+        :else (abs (mult b (quot a (gcd a b))))))
+</pre>
+
+</div>
+
+
+</article>
+
+</slide>
+
+
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org3a3f14e" class="outline-4">
+<h4 id="org3a3f14e">指數函數 ( expt )</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>接著我們看稍微複雜的指數函數，首先對於容易計算的做個過濾</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="clojure">
+(defn expt
+  [base pow]
+  (if (and (not (float? base)) (integer? pow))　
+    (cond
+         ... ;; 不是浮點數為底且指數次方為整數者，接著處理 ( -&gt; 進入第二層 )
+　　　)
+    (Math/pow base pow))) ;; 太複雜的就直接 pow 函數來吧!
+</pre>
+
+</div>
+
+<ul>
+<li>不容易計算的，就直接硬幹帶入 Math/pow 函數中處理</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org5597db2" class="outline-4">
+<h4 id="org5597db2">指數函數 ( expt )</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>第二層開始分正的次方、零的次方、負的次方做處理</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="clojure">
+...
+(cond
+ (pos? pow) (expt-int base pow) ;; 正的次方 -&gt; 用專門算整數次方的函數計算
+     (zero? pow) (cond   
+                      ...       ;;  0 的次方 -&gt; 0 的次方基本上是 1 ( -&gt; 進入第三層 )
+                 )
+     :else (/ 1 (expt-int base (minus pow)))) ;; 負的次方 -&gt; 轉成正的次方處理，並做個倒數
+...
+</pre>
+
+</div>
+
+<ul>
+<li>0 的次方是 1 ，是數值塔最下層的元素，那回傳應該依照什麼型別呢？</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orga478548" class="outline-4">
+<h4 id="orga478548">指數函數 ( expt )</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="clojure">
+;; 零的次方
+...
+(cond
+  (= (type base) BigDecimal) 1M
+  (= (type base) java.math.BigInteger) (java.math.BigInteger. "1")
+  (when-available clojure.lang.BigInt (= (type base) clojure.lang.BigInt))
+  (when-available clojure.lang.BigInt (bigint 1))
+  :else 1)
+...
+</pre>
+
+</div>
+
+<ul>
+<li>這邊可以觀察到，是根據底數（base）的型別做回傳，因為主角就是底數</li>
+
+<li>這邊同時處理 clojure 與 java 的數值型別，而不單單只是 clojure</li>
+
+<li>clojure 部分有套一個 when-available 函數，若有誤就丟錯誤</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orgcef7d29" class="outline-4">
+<h4 id="orgcef7d29">數值塔幫助思考</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>這邊就能發現，數值塔需要去捕捉輸入的型別，可能會讓輸出延續那個型別</li>
+</ul>
+
+
+<ul>
+<li>這邊就要考慮，輸入、輸出與數學函數運算過程中會遇到的型別問題</li>
+</ul>
+
+
+<ul>
+<li>此外，像 Clojure 與 Java 可以互相使用的話，彼此的數字型別也要照顧到</li>
+</ul>
+
+
+<ul>
+<li>這給予我們一個範例，若要在 Clojure 中建立一個數學相關的 library</li>
+</ul>
+
+
+<ul>
+<li>不過，事情還沒結束！我們可以透過 defprotocol 與 extend-type 做得更好</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+
+
+</slide>
+<slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/clojure-tw.png"></aside><hgroup class="">
+       <h2 class=" "><div id="outline-container-org8b0b992" class="outline-2">
+<h2 id="org8b0b992">defprotocol 與 extend-type</h2>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-">
+
+
+</article>
+
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org813bf7a" class="outline-4">
+<h4 id="org813bf7a">數值型別 + 數學函數 = 類（Class）？</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>當在處理數值塔，能發現我們不斷在處理數值型別判斷與數學函數的運算</li>
+</ul>
+
+
+<ul>
+<li>感覺就是很物件導向（？）進一步思考，或許可以使用 defprotocol</li>
+</ul>
+
+
+<ul>
+<li>使用 defprotocol 這個 macro 來提供一個方法（Method）的簽名，對應一個數學函數</li>
+</ul>
+
+
+<ul>
+<li>再透過 macro - extend-type 來將數學函數對應到不同的 type 的處理</li>
+</ul>
+
+
+<ul>
+<li>個人觀察：感覺是需要頻繁上下數值塔的 type 才需要這樣做，例如高斯類型的函數（floor, ceil）</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org250a1b6" class="outline-4">
+<h4 id="org250a1b6">defprotocol 與 extend-type</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<article class="flexbox vcenter">
+
+<div class="figure">
+<p><img src="images/extend-type.png" alt="extend-type.png" width="800px" />
+</p>
+</div>
+</article>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org7e6734b" class="outline-4">
+<h4 id="org7e6734b">defprotocol</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>看個 defprotocol 的例子，這邊可以看到只是做個簽名</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="clojure">
+(defprotocol MathFunctions
+  (floor [n] "(floor n) returns the greatest integer less than or equal to n.
+If n is an exact number, floor returns an integer, otherwise a double.")
+  (ceil [n] "(ceil n) returns the least integer greater than or equal to n.
+If n is an exact number, ceil returns an integer, otherwise a double.")
+  (round [n] "(round n) rounds to the nearest integer.
+round always returns an integer.  Rounds up for values exactly in between two integers.")
+  (integer-length [n] "Length of integer in binary")
+  (sqrt [n] "Square root, but returns exact number if possible."))
+</pre>
+
+</div>
+
+<ul>
+<li>隨後也緊跟著 declare 宣告 sqrt-integer, sqrt-ratio 與 sqrt-decimal</li>
+<li>用來在 extend-type 中實現如何處理不同類型的方根</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-orgc014fe1" class="outline-4">
+<h4 id="orgc014fe1">extend-type</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>也來看兩個 extend-type 的處理</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="clojure">
+;; 整數的 extend-type : 整數做 floor, ceil 與 round 根本不變
+(extend-type
+ Integer MathFunctions
+ (floor [n] n)  (ceil [n] n)  (round [n] n) 
+ (integer-length [n] (- 32 (Integer/numberOfLeadingZeros n)))
+ (sqrt [n] (sqrt-integer n))) ;; 處理整數的方根問題，另代函數處理
+</pre>
+
+</div>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="clojure">
+;; 雙精度浮點數的 extend-type : 直接套公式
+(extend-type
+ Double MathFunctions
+ (floor [n] (Math/floor n))  (ceil [n] (Math/ceil n)) 
+ (round [n] (Math/round n))  (sqrt [n] (Math/sqrt n)))
+</pre>
+
+</div>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org601a6b2" class="outline-4">
+<h4 id="org601a6b2">exact-integer-sqrt 與 sqrt-integer</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>在處理對整數取方根的問題時，我們遇到回傳問題，如果回傳要保持整數的話：
+<ul>
+<li>取距離整數開根號之後的值，最小的整數？</li>
+</ul></li>
+</ul>
+
+
+<ul>
+<li>0 的次方是 1 要回傳整數或浮點數，是一個數值塔「下層」往「上層」處理</li>
+</ul>
+
+
+<ul>
+<li>現在是一個「下層」運算完到「上層」，會需要做取捨才能回到「下層」</li>
+</ul>
+
+
+<ul>
+<li>類似於整數除整數的問題</li>
+</ul>
+
+
+<ul>
+<li>所以在 Clojure 中，就特別用 sqrt-integer 表示回傳最接近方根的整數</li>
+</ul>
+
+
+<ul>
+<li>用 exact (精確) 回傳 double 的方根值，確切近似精確的方根數值</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+
+</slide>
+<slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/clojure-tw.png"></aside><hgroup class="">
+       <h2 class=" "><div id="outline-container-orgf8e0229" class="outline-2">
+<h2 id="orgf8e0229">研究心得</h2>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-">
+
+
+</article>
+
+</slide>
+<slide id="sec-"  >
+<hgroup class="">
+       <h2 class=" "><div id="outline-container-org1081cc5" class="outline-4">
+<h4 id="org1081cc5">研究心得</h4>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-">
+<ul>
+<li>數值塔是個很不錯的概念，可以對應到代數中封閉性的問題</li>
+</ul>
+
+
+<ul>
+<li>本 library 是一個很好的範例，提供很多命名、控制流程的參考：</li>
+</ul>
+
+
+<p>
+1 . 遞迴表示數學函數（ gcd, integer-sqrt ）
+</p>
+
+
+<p>
+2 . 用 when 和 if 控制數值塔的上上下下，對輸入做預處理和丟錯誤
+</p>
+
+
+<p>
+3 . 透過 defprotocol 與 extend-type 來將函數代入型別做各自的實現
+</p>
+
+
+<p>
+4 . 透過 exact 函數前餟，來處理回傳型別是否和輸入保持相同型別
+</p>
+
+
+<p>
+5 . 還有更多 clojure 與 java 處理基本型別的函數（BigDecimal, BigInt）
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+
+
+
+
+
+
+</slide>
+<slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/clojure-tw.png"></aside><hgroup class="">
+       <h2 class=" "><div id="outline-container-org089b9e4" class="outline-2">
+<h2 id="org089b9e4">Thank You</h2>
+</div>
+</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-">
+<p>
+fatfingererr@gmail.com
+</p>
+
+
+</article>
+
+</slide>
+<slide class="backdrop"></slide>
+</slides> 
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body> 
+
+</html>

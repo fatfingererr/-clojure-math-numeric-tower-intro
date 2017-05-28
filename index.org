@@ -1,0 +1,348 @@
+#+TITLE:  Clojure 的數值塔
+#+SUBTITLE: ClojureTW 2017 五月聚會
+#+DATE: 2017/05/29 (一)
+#+AUTHOR: fatfingererr
+#+EMAIL: fatfingererr@gmail.com
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
+#+OPTIONS: e:t email:nil f:t inline:t num:nil p:nil pri:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:nil todo:t |:t
+
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+#+GOOGLE_PLUS: https://plus.google.com/fatfingererr
+#+WWW: http://fatfingererr.github.io/
+#+GITHUB: http://github.com/fatfingererr
+#+TWITTER: fatfingererr
+
+#+FAVICON: images/clojure-tw.png
+#+ICON: images/clojure-tw.png
+#+HASHTAG: Clojure 的數值塔
+
+
+
+*** 大綱
+
+- 本投影片主要是深入探討 clojure 中的 math.numeric-tower 函式庫
+
+- 著重於探討數值塔和函數的關係，還有處理數值塔的控制流程
+
+- 對於深入的 Clojure 與 Java 型別並沒有特別討論
+
+- 在 dev.clojure.org 中，也有在開發過程中不錯的討論：
+- [[https://dev.clojure.org/jira/browse/MTOWER-3][unnecessary reflection used in math functions for coercion (bigint)]]
+- [[https://dev.clojure.org/jira/browse/MTOWER-2][Eliminate a few uses of Reflection in math.numeric-tower]]
+
+- 此外，可能有錯誤的地方請不吝指正，謝謝！
+
+* 數值塔 Numerical tower
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+
+
+*** 什麼塔？
+:PROPERTIES:
+:FILL:     images/taipei-101.jpg
+:TITLE:    white
+:SLIDE:    white
+:END:
+
+
+*** 什麼是數值塔（Numerical tower）？
+
+- 任何的數字，都可以被組織在一個子集的塔，塔中每一層是上一層的子集
+#+BEGIN_CENTER
+#+ATTR_HTML: :width 400px
+[[file:images/numerical-tower.png]]
+#+END_CENTER
+
+
+*** 類型到定義
+
+- 當數值塔被建立起來，就可以依據每一層對應一種抽象的數值對象
+
+
+- 而抽象的數值對象，則可以用函數定義，如 number? , complex? , real? , rational?
+
+
+- 由於數值對象具有子集層層包含的關係，在電腦中處理會變得複雜
+    - *多重表示* ：數值塔越底層的對象，可以被更多重的表示
+    - 例如：整數可以被表示為有理數、實數和複數
+
+
+- 這個概念主要在 Scheme 被提出，Clojure 也使用這個概念
+
+
+- 題外話，網路上也有一些 Python 和數值塔的討論
+
+*** 絕對值函數 ( abs )
+
+- 為了解決數值塔的問題，我們首先看 Clojure 的絕對值函數：
+
+#+BEGIN_SRC clojure
+(defn abs "(abs n) is the absolute value of n" [n]
+  (cond
+   (not (number? n)) (throw (IllegalArgumentException.
+			     "abs requires a number"))
+   (neg? n) (minus n)
+   :else n))
+#+END_SRC
+
+- 這邊蠻容易可以觀察出來，解決數值塔的問題就從塔最上層開始檢查
+
+
+- 一路往下層的子集去檢驗，這邊只對非數值（number?）分流出去丟錯誤
+
+*** 最大公因數函數 ( gcd )
+
+- 這邊也可以看到，gcd 先對 a 或 b 兩個都要是整數做處理，不是整數就丟錯誤
+
+
+- 接著就是實現 gcd 的數學問題，這邊可以注意到特別判斷了有一數是 0 的情況
+
+#+BEGIN_SRC clojure
+(defn gcd "(gcd a b) returns the greatest common divisor of a and b" [a b]
+  (if (or (not (integer? a)) (not (integer? b)))
+    (throw (IllegalArgumentException. "gcd requires two integers"))  
+    (loop [a (abs a) b (abs b)]
+      (if (zero? b) a,
+	  (recur b (mod a b))))))
+#+END_SRC
+
+- 迷之音：很美的實現！
+
+*** 最小公倍數函數 ( lcm )
+
+- 最小公倍數的算法有特殊公式，可從 gcd 反推回來，所以很普通
+
+
+- 可以特別注意到的是這邊用 when 來判斷輸入型別，而非 if 
+    - [[https://stackoverflow.com/questions/25948511/when-to-use-if-vs-when-in-clojure][When to use if vs. when in Clojure]]
+
+#+BEGIN_SRC clojure
+(defn lcm
+  "(lcm a b) returns the least common multiple of a and b"
+  [a b]
+  (when (or (not (integer? a)) (not (integer? b)))
+    (throw (IllegalArgumentException. "lcm requires two integers")))
+  (cond (zero? a) 0
+        (zero? b) 0
+        :else (abs (mult b (quot a (gcd a b))))))
+#+END_SRC
+
+
+
+*** 指數函數 ( expt ) 
+
+- 接著我們看稍微複雜的指數函數，首先對於容易計算的做個過濾
+
+#+BEGIN_SRC clojure
+(defn expt
+  [base pow]
+  (if (and (not (float? base)) (integer? pow))　
+    (cond
+         ... ;; 不是浮點數為底且指數次方為整數者，接著處理 ( -> 進入第二層 )
+　　　)
+    (Math/pow base pow))) ;; 太複雜的就直接 pow 函數來吧!
+#+END_SRC
+
+- 不容易計算的，就直接硬幹帶入 Math/pow 函數中處理
+
+*** 指數函數 ( expt ) 
+
+- 第二層開始分正的次方、零的次方、負的次方做處理
+
+#+BEGIN_SRC clojure
+...
+(cond
+ (pos? pow) (expt-int base pow) ;; 正的次方 -> 用專門算整數次方的函數計算
+     (zero? pow) (cond   
+                      ...       ;;  0 的次方 -> 0 的次方基本上是 1 ( -> 進入第三層 )
+                 )
+     :else (/ 1 (expt-int base (minus pow)))) ;; 負的次方 -> 轉成正的次方處理，並做個倒數
+...
+#+END_SRC
+
+-  0 的次方是 1 ，是數值塔最下層的元素，那回傳應該依照什麼型別呢？
+
+*** 指數函數 ( expt )
+
+#+BEGIN_SRC clojure
+;; 零的次方
+...
+(cond
+  (= (type base) BigDecimal) 1M
+  (= (type base) java.math.BigInteger) (java.math.BigInteger. "1")
+  (when-available clojure.lang.BigInt (= (type base) clojure.lang.BigInt))
+  (when-available clojure.lang.BigInt (bigint 1))
+  :else 1)
+...
+#+END_SRC
+
+- 這邊可以觀察到，是根據底數（base）的型別做回傳，因為主角就是底數
+
+- 這邊同時處理 clojure 與 java 的數值型別，而不單單只是 clojure
+
+- clojure 部分有套一個 when-available 函數，若有誤就丟錯誤
+
+
+*** 數值塔幫助思考
+
+- 這邊就能發現，數值塔需要去捕捉輸入的型別，可能會讓輸出延續那個型別
+
+
+- 這邊就要考慮，輸入、輸出與數學函數運算過程中會遇到的型別問題
+
+
+- 此外，像 Clojure 與 Java 可以互相使用的話，彼此的數字型別也要照顧到
+
+
+- 這給予我們一個範例，若要在 Clojure 中建立一個數學相關的 library 
+
+
+- 不過，事情還沒結束！我們可以透過 defprotocol 與 extend-type 做得更好
+
+
+
+* defprotocol 與 extend-type
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+
+
+*** 數值型別 + 數學函數 = 類（Class）？
+
+- 當在處理數值塔，能發現我們不斷在處理數值型別判斷與數學函數的運算
+
+
+- 感覺就是很物件導向（？）進一步思考，或許可以使用 defprotocol 
+
+
+- 使用 defprotocol 這個 macro 來提供一個方法（Method）的簽名，對應一個數學函數
+
+
+- 再透過 macro - extend-type 來將數學函數對應到不同的 type 的處理
+
+
+- 個人觀察：感覺是需要頻繁上下數值塔的 type 才需要這樣做，例如高斯類型的函數（floor, ceil）
+
+*** defprotocol 與 extend-type
+#+BEGIN_CENTER
+#+ATTR_HTML: :width 800px
+[[file:images/extend-type.png]]
+#+END_CENTER
+
+
+*** defprotocol
+
+- 看個 defprotocol 的例子，這邊可以看到只是做個簽名
+
+#+BEGIN_SRC clojure
+(defprotocol MathFunctions
+  (floor [n] "(floor n) returns the greatest integer less than or equal to n.
+If n is an exact number, floor returns an integer, otherwise a double.")
+  (ceil [n] "(ceil n) returns the least integer greater than or equal to n.
+If n is an exact number, ceil returns an integer, otherwise a double.")
+  (round [n] "(round n) rounds to the nearest integer.
+round always returns an integer.  Rounds up for values exactly in between two integers.")
+  (integer-length [n] "Length of integer in binary")
+  (sqrt [n] "Square root, but returns exact number if possible."))
+#+END_SRC
+
+- 隨後也緊跟著 declare 宣告 sqrt-integer, sqrt-ratio 與 sqrt-decimal 
+- 用來在 extend-type 中實現如何處理不同類型的方根
+
+*** extend-type
+
+- 也來看兩個 extend-type 的處理
+
+#+BEGIN_SRC clojure
+;; 整數的 extend-type : 整數做 floor, ceil 與 round 根本不變
+(extend-type
+ Integer MathFunctions
+ (floor [n] n)  (ceil [n] n)  (round [n] n) 
+ (integer-length [n] (- 32 (Integer/numberOfLeadingZeros n)))
+ (sqrt [n] (sqrt-integer n))) ;; 處理整數的方根問題，另代函數處理
+#+END_SRC
+
+#+BEGIN_SRC clojure
+;; 雙精度浮點數的 extend-type : 直接套公式
+(extend-type
+ Double MathFunctions
+ (floor [n] (Math/floor n))  (ceil [n] (Math/ceil n)) 
+ (round [n] (Math/round n))  (sqrt [n] (Math/sqrt n)))
+#+END_SRC
+
+
+*** exact-integer-sqrt 與 sqrt-integer
+
+- 在處理對整數取方根的問題時，我們遇到回傳問題，如果回傳要保持整數的話：
+   - 取距離整數開根號之後的值，最小的整數？
+
+
+-  0 的次方是 1 要回傳整數或浮點數，是一個數值塔「下層」往「上層」處理
+
+
+- 現在是一個「下層」運算完到「上層」，會需要做取捨才能回到「下層」
+
+
+- 類似於整數除整數的問題
+
+
+- 所以在 Clojure 中，就特別用 sqrt-integer 表示回傳最接近方根的整數
+
+
+- 用 exact (精確) 回傳 double 的方根值，確切近似精確的方根數值
+
+
+* 研究心得
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+
+*** 研究心得
+
+- 數值塔是個很不錯的概念，可以對應到代數中封閉性的問題
+
+
+- 本 library 是一個很好的範例，提供很多命名、控制流程的參考：
+
+
+1 . 遞迴表示數學函數（ gcd, integer-sqrt ）
+
+
+2 . 用 when 和 if 控制數值塔的上上下下，對輸入做立即檢查和丟錯誤
+
+
+3 . 透過 defprotocol 與 extend-type 來將函數代入型別做各自的實現
+
+
+4 . 透過 exact 函數前綴，來處理回傳型別是否和輸入保持相同型別
+
+
+5 . 還有更多 clojure 與 java 處理基本型別的函數（BigDecimal, BigInt）
+
+
+
+
+
+
+
+* Thank You
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+  fatfingererr@gmail.com
