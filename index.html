@@ -2,7 +2,7 @@
 <html>
 <head>
 <title></title>
-<!-- 2017-05-28 Sun 22:54 -->
+<!-- 2017-05-28 Sun 22:59 -->
 <meta  charset="utf-8" />
 <meta  htto-equiv="X-UA-Compatible" content="chrome=1" />
 <meta  name="generator" content="Org-mode with org-ioslide" />
@@ -41,8 +41,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org7491a43" class="outline-4">
-<h4 id="org7491a43">大綱</h4>
+       <h2 class=" "><div id="outline-container-org1623ace" class="outline-4">
+<h4 id="org1623ace">大綱</h4>
 </div>
 </h2>
        <h3></h3>
@@ -50,15 +50,27 @@
 <article class="" id="text-">
 <ul>
 <li>本投影片主要是深入探討 clojure 中的 math.numeric-tower 函式庫</li>
+</ul>
 
+
+<ul>
 <li>著重於探討數值塔和函數的關係，還有處理數值塔的控制流程</li>
+</ul>
 
+
+<ul>
 <li>對於深入的 Clojure 與 Java 型別並沒有特別討論</li>
+</ul>
 
+
+<ul>
 <li>在 dev.clojure.org 中，也有在開發過程中不錯的討論：</li>
 <li><a href="https://dev.clojure.org/jira/browse/MTOWER-3">unnecessary reflection used in math functions for coercion (bigint)</a></li>
 <li><a href="https://dev.clojure.org/jira/browse/MTOWER-2">Eliminate a few uses of Reflection in math.numeric-tower</a></li>
+</ul>
 
+
+<ul>
 <li>此外，可能有錯誤的地方請不吝指正，謝謝！</li>
 </ul>
 
@@ -70,8 +82,8 @@
 </slide>
 <slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
 <aside class="gdbar right bottom"><img src="images/clojure-tw.png"></aside><hgroup class="">
-       <h2 class=" "><div id="outline-container-org1603a72" class="outline-2">
-<h2 id="org1603a72">數值塔 Numerical tower</h2>
+       <h2 class=" "><div id="outline-container-org2a55662" class="outline-2">
+<h2 id="org2a55662">數值塔 Numerical tower</h2>
 </div>
 </h2>
        <h3></h3>
@@ -85,8 +97,8 @@
 </slide>
 <slide id="sec-" class="fill white nobackground" style="background-image: url(images/taipei-101.jpg)">
 <hgroup class="">
-       <h2 class="white "><div id="outline-container-orgce99c3c" class="outline-4">
-<h4 id="orgce99c3c">什麼塔？</h4>
+       <h2 class="white "><div id="outline-container-orgfee2170" class="outline-4">
+<h4 id="orgfee2170">什麼塔？</h4>
 </div>
 </h2>
        <h3></h3>
@@ -102,8 +114,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org265f212" class="outline-4">
-<h4 id="org265f212">什麼是數值塔（Numerical tower）？</h4>
+       <h2 class=" "><div id="outline-container-org2659111" class="outline-4">
+<h4 id="org2659111">什麼是數值塔（Numerical tower）？</h4>
 </div>
 </h2>
        <h3></h3>
@@ -129,8 +141,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org76b2726" class="outline-4">
-<h4 id="org76b2726">類型到定義</h4>
+       <h2 class=" "><div id="outline-container-orgf153b61" class="outline-4">
+<h4 id="orgf153b61">類型到定義</h4>
 </div>
 </h2>
        <h3></h3>
@@ -172,8 +184,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org6a248df" class="outline-4">
-<h4 id="org6a248df">絕對值函數 ( abs )</h4>
+       <h2 class=" "><div id="outline-container-orgcca28e5" class="outline-4">
+<h4 id="orgcca28e5">絕對值函數 ( abs )</h4>
 </div>
 </h2>
        <h3></h3>
@@ -213,8 +225,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org5652f8e" class="outline-4">
-<h4 id="org5652f8e">最大公因數函數 ( gcd )</h4>
+       <h2 class=" "><div id="outline-container-orgf5d97d5" class="outline-4">
+<h4 id="orgf5d97d5">最大公因數函數 ( gcd )</h4>
 </div>
 </h2>
        <h3></h3>
@@ -254,8 +266,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org9f209da" class="outline-4">
-<h4 id="org9f209da">最小公倍數函數 ( lcm )</h4>
+       <h2 class=" "><div id="outline-container-org4509062" class="outline-4">
+<h4 id="org4509062">最小公倍數函數 ( lcm )</h4>
 </div>
 </h2>
        <h3></h3>
@@ -298,8 +310,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org96c72fe" class="outline-4">
-<h4 id="org96c72fe">指數函數 ( expt )</h4>
+       <h2 class=" "><div id="outline-container-org8ad4f03" class="outline-4">
+<h4 id="org8ad4f03">指數函數 ( expt )</h4>
 </div>
 </h2>
        <h3></h3>
@@ -335,8 +347,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-orgd5d2019" class="outline-4">
-<h4 id="orgd5d2019">指數函數 ( expt )</h4>
+       <h2 class=" "><div id="outline-container-orgb3fa05f" class="outline-4">
+<h4 id="orgb3fa05f">指數函數 ( expt )</h4>
 </div>
 </h2>
        <h3></h3>
@@ -373,8 +385,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org1178d4a" class="outline-4">
-<h4 id="org1178d4a">指數函數 ( expt )</h4>
+       <h2 class=" "><div id="outline-container-orgc5c6902" class="outline-4">
+<h4 id="orgc5c6902">指數函數 ( expt )</h4>
 </div>
 </h2>
        <h3></h3>
@@ -413,8 +425,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-orgcf8592d" class="outline-4">
-<h4 id="orgcf8592d">數值塔幫助思考</h4>
+       <h2 class=" "><div id="outline-container-orgaa50683" class="outline-4">
+<h4 id="orgaa50683">數值塔幫助思考</h4>
 </div>
 </h2>
        <h3></h3>
@@ -456,8 +468,8 @@
 </slide>
 <slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
 <aside class="gdbar right bottom"><img src="images/clojure-tw.png"></aside><hgroup class="">
-       <h2 class=" "><div id="outline-container-org66e27e3" class="outline-2">
-<h2 id="org66e27e3">defprotocol 與 extend-type</h2>
+       <h2 class=" "><div id="outline-container-org058cfcf" class="outline-2">
+<h2 id="org058cfcf">defprotocol 與 extend-type</h2>
 </div>
 </h2>
        <h3></h3>
@@ -471,8 +483,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org402f807" class="outline-4">
-<h4 id="org402f807">數值型別 + 數學函數 = 類（Class）？</h4>
+       <h2 class=" "><div id="outline-container-org4d900ea" class="outline-4">
+<h4 id="org4d900ea">數值型別 + 數學函數 = 類（Class）？</h4>
 </div>
 </h2>
        <h3></h3>
@@ -510,8 +522,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org182ac79" class="outline-4">
-<h4 id="org182ac79">defprotocol 與 extend-type</h4>
+       <h2 class=" "><div id="outline-container-org9be890f" class="outline-4">
+<h4 id="org9be890f">defprotocol 與 extend-type</h4>
 </div>
 </h2>
        <h3></h3>
@@ -534,8 +546,8 @@
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org060b77e" class="outline-4">
-<h4 id="org060b77e">defprotocol</h4>
+       <h2 class=" "><div id="outline-container-orgefac121" class="outline-4">
+<h4 id="orgefac121">defprotocol</h4>
 </div>
 </h2>
        <h3></h3>
@@ -574,8 +586,8 @@ round always returns an integer.  Rounds up for values exactly in between two in
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-orga30ad41" class="outline-4">
-<h4 id="orga30ad41">extend-type</h4>
+       <h2 class=" "><div id="outline-container-orge893f5a" class="outline-4">
+<h4 id="orge893f5a">extend-type</h4>
 </div>
 </h2>
        <h3></h3>
@@ -619,8 +631,8 @@ round always returns an integer.  Rounds up for values exactly in between two in
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org38228aa" class="outline-4">
-<h4 id="org38228aa">exact-integer-sqrt 與 sqrt-integer</h4>
+       <h2 class=" "><div id="outline-container-orga6916cc" class="outline-4">
+<h4 id="orga6916cc">exact-integer-sqrt 與 sqrt-integer</h4>
 </div>
 </h2>
        <h3></h3>
@@ -669,8 +681,8 @@ round always returns an integer.  Rounds up for values exactly in between two in
 </slide>
 <slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
 <aside class="gdbar right bottom"><img src="images/clojure-tw.png"></aside><hgroup class="">
-       <h2 class=" "><div id="outline-container-org486730f" class="outline-2">
-<h2 id="org486730f">研究心得</h2>
+       <h2 class=" "><div id="outline-container-org50d2a27" class="outline-2">
+<h2 id="org50d2a27">研究心得</h2>
 </div>
 </h2>
        <h3></h3>
@@ -683,8 +695,8 @@ round always returns an integer.  Rounds up for values exactly in between two in
 </slide>
 <slide id="sec-"  >
 <hgroup class="">
-       <h2 class=" "><div id="outline-container-org69297e3" class="outline-4">
-<h4 id="org69297e3">研究心得</h4>
+       <h2 class=" "><div id="outline-container-org7a056df" class="outline-4">
+<h4 id="org7a056df">研究心得</h4>
 </div>
 </h2>
        <h3></h3>
@@ -740,8 +752,8 @@ round always returns an integer.  Rounds up for values exactly in between two in
 </slide>
 <slide id="sec-" class=" segue dark quote nobackground" style="background-image: url(nil)">
 <aside class="gdbar right bottom"><img src="images/clojure-tw.png"></aside><hgroup class="">
-       <h2 class=" "><div id="outline-container-org356758d" class="outline-2">
-<h2 id="org356758d">Thank You</h2>
+       <h2 class=" "><div id="outline-container-org3c0951d" class="outline-2">
+<h2 id="org3c0951d">Thank You</h2>
 </div>
 </h2>
        <h3></h3>

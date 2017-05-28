@@ -29,13 +29,17 @@
 
 - 本投影片主要是深入探討 clojure 中的 math.numeric-tower 函式庫
 
+
 - 著重於探討數值塔和函數的關係，還有處理數值塔的控制流程
 
+
 - 對於深入的 Clojure 與 Java 型別並沒有特別討論
+
 
 - 在 dev.clojure.org 中，也有在開發過程中不錯的討論：
 - [[https://dev.clojure.org/jira/browse/MTOWER-3][unnecessary reflection used in math functions for coercion (bigint)]]
 - [[https://dev.clojure.org/jira/browse/MTOWER-2][Eliminate a few uses of Reflection in math.numeric-tower]]
+
 
 - 此外，可能有錯誤的地方請不吝指正，謝謝！
 
